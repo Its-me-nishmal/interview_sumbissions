@@ -1,8 +1,13 @@
 import { createOrder, getOrders, getOrder, updateOrder, deleteOrder } from "../services/order.js";
 import { ERROR_500 } from "../utility/error.js";
+import { orderValidation } from "../utility/validation.js";
 
 export const createOrder = async (req, res) => {
     try {
+        const { error } = orderValidation.validate(req.body);
+        if (error) {
+            return res.status(400).json({ message: error.details[0].message });
+        }
         const order = await createOrder(req.body);
         res.status(201).json(order);
     } catch (error) {
@@ -29,6 +34,10 @@ export const getOrder = async (req, res) => {
 };
 
 export const updateOrder = async (req, res) => {
+    const { error } = orderValidation.validate(req.body);
+    if (error) {
+        return res.status(400).json({ message: error.details[0].message });
+    }
     try {
         const order = await updateOrder(req.params.id, req.body);
         res.status(200).json(order);
@@ -36,6 +45,7 @@ export const updateOrder = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
 
 export const deleteOrder = async (req, res) => {
     try {

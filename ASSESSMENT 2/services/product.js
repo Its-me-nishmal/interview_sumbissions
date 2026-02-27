@@ -5,6 +5,9 @@ import Category from "../models/catogory.js";
 export const createProduct = async (req, res) => {
     try {
         const { name, description, image, variants, brand, category } = req.body;
+        // validaiton 
+
+
         const product = await Product.create({ name, description, image, variants, brand, category });
         res.status(201).json(product);
     } catch (error) {

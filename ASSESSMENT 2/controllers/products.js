@@ -1,8 +1,15 @@
 import { createProduct, getProducts, getProduct, updateProduct, deleteProduct } from "../services/product.js";
 import { ERROR_500 } from "../utility/error.js";
+import { productValidation } from "../utility/validation.js";
 
 export const createProduct = async (req, res) => {
+
     try {
+        const { error } = productValidation.validate(req.body);
+        if (error) {
+            return res.status(400).json({ message: error.details[0].message });
+        }
+
         const product = await createProduct(req.body);
         res.status(201).json(product);
     } catch (error) {
@@ -29,6 +36,10 @@ export const getProduct = async (req, res) => {
 };
 
 export const updateProduct = async (req, res) => {
+    const { error } = productValidation.validate(req.body);
+    if (error) {
+        return res.status(400).json({ message: error.details[0].message });
+    }
     try {
         const product = await updateProduct(req.params.id, req.body);
         res.status(200).json(product);
