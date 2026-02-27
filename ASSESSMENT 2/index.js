@@ -27,6 +27,11 @@ app.get("/", (req, res) => {
 app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
 
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send("Something broke!");
+});
+
 app.listen(process.env.PORT, () => {
     console.log(`Server running on port ${process.env.PORT}`);
 });
